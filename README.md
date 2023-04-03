@@ -140,7 +140,7 @@ Responses
     "completed": true,
     "_id": "642a048914531830b1a0a6ae",
     "title" : "add a new task",
-    "description": "add a new task to the pending tasks"
+    "description": "add a new task to the pending tasks",
     "createdAt": "2023-04-02T22:41:07.164Z",
     "updatedAt": "2023-04-03T00:02:21.573Z",
     "__v": 0
