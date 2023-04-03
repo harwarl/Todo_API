@@ -142,6 +142,30 @@ let TodoController = class TodoController {
             }
         });
     }
+    postComplete(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { todoId } = req.params;
+            try {
+                const todo = yield Todo_1.Todo.findById(todoId);
+                if (!todo) {
+                    const err = new Error('Invalid Id');
+                    err.statusCode = 404;
+                    throw err;
+                    // return res.status(404).json({status: true, message: 'Invalid Id'});
+                }
+                const completed_todo = yield Todo_1.Todo.findOneAndUpdate({ _id: todoId }, {
+                    completed: true,
+                }, { new: true });
+                return res.status(200).json({ status: true, message: 'Task Completed', data: completed_todo });
+            }
+            catch (err) {
+                if (!err.statusCode) {
+                    err.statusCode = 500;
+                }
+                next(err);
+            }
+        });
+    }
 };
 __decorate([
     (0, decorators_1.get)('/'),
@@ -173,6 +197,12 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object, Function]),
     __metadata("design:returntype", Promise)
 ], TodoController.prototype, "delTodo", null);
+__decorate([
+    (0, decorators_1.post)('/:todoId/completed'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object, Function]),
+    __metadata("design:returntype", Promise)
+], TodoController.prototype, "postComplete", null);
 TodoController = __decorate([
-    (0, decorators_1.controller)('/tasks')
+    (0, decorators_1.controller)('/todos')
 ], TodoController);

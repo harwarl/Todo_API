@@ -8,7 +8,7 @@ interface ErrorWithStatusCode extends Error{
     statusCode? : number
 }
 
-@controller('/tasks')
+@controller('/todos')
 class TodoController{
     // Get all Todos
     @get('/')
@@ -121,5 +121,30 @@ class TodoController{
             }
             next(err);
         }
+    }
+
+    @post('/:todoId/completed')
+    async postComplete(req: Request, res: Response, next: NextFunction){
+        const { todoId } = req.params;
+        try{
+            const todo = await Todo.findById(todoId);
+            if(!todo){
+                const err: ErrorWithStatusCode = new Error('Invalid Id');
+                err.statusCode = 404;
+                throw err;
+                // return res.status(404).json({status: true, message: 'Invalid Id'});
+            }
+            const completed_todo = await Todo.findOneAndUpdate({_id: todoId}, {
+                completed: true,
+            }, {new: true});
+
+            return res.status(200).json({status: true, message: 'Task Completed', data: completed_todo})
+        }catch(err: any){
+            if(!err.statusCode){
+                err.statusCode = 500;
+            }
+            next(err);
+        }
+
     }
 }
